@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -17,6 +19,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
 
 @Table(name = "users")
 @Entity
@@ -40,9 +44,11 @@ public class User implements UserDetails{
     @Column(name = "password", nullable = false)
     private String password;
 
+    @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private Date createdAt;
 
+    @UpdateTimestamp
     @Column(name = "updated_at")
     private Date updatedAt;
 
@@ -51,7 +57,8 @@ public class User implements UserDetails{
     @CollectionTable(name = "user_authorities", joinColumns = @JoinColumn(name = "user_id"))
     private List<Authority> authorities;
 
-    // private List<Todo> todos;
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Todo> todos;
 
     // Default constructor
     public User() {}

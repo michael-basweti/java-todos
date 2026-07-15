@@ -2,9 +2,12 @@ package com.mbasweti.springboot.todos.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Table(name = "todos")
@@ -29,18 +32,21 @@ public class Todo {
     private boolean completed;
 
 
-    // private User owner;
+    @JoinColumn(name = "owner_id", referencedColumnName = "id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User owner;
 
     // Default constructor
     public Todo() {}
 
     // Parameterized constructor
-    public Todo(String title, String description, int priority, boolean completed) {
+    public Todo(String title, String description, int priority, boolean completed, User owner) {
         // this.id = id;
         this.title = title;
         this.description = description;
         this.priority = priority;
         this.completed = completed;
+        this.owner = owner;
     }
 
     // Getters and Setters
@@ -82,6 +88,14 @@ public class Todo {
 
     public void setCompleted(boolean completed) {
         this.completed = completed;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
 }
